@@ -8,24 +8,24 @@ else
 	CFLAGS :=	-Wall -Wextra -Werror
 endif
 
-INC_DIR := -I./inc
+INC_DIR := -I./includes
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 
-SRC := main.c
+SRC := main.c ft_time.c
 OBJ := ${addprefix $(OBJ_DIR)/, ${SRC:.c=.o}}
 
-LIBS := 
+LIBS := -lpthread
 LIBSINC :=
 
 all : $(NAME)
 
 $(NAME)	:	$(OBJ) $(LIBS)
-	$(CC) $(CFLAGS) -o $@ $(OBJ) $(INC) $(LIBSINC) $(LIBS)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(INC_DIR) $(LIBSINC) $(LIBS)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -o $@ -c $< $(INC) $(LIBSINC)
+	$(CC) $(CFLAGS) -o $@ -c $< $(INC_DIR) $(LIBSINC)
 
 %.a :
 	$(MAKE) -C $(@D)
