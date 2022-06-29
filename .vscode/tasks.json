@@ -1,0 +1,25 @@
+{
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "make_debug",
+      "command": "make",
+      "args": [
+				"re",
+				"DEBUG=1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "make re with DEBUG=1"
+    }
+  ],
+  "version": "2.0.0"
+}
