@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:46:57 by kmendes           #+#    #+#             */
-/*   Updated: 2022/06/29 17:36:07 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/06 04:09:43 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,46 +14,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #include "philosophers.h"
 
-#define PTHREAD_NUM 2
+void	rick_watch(t_rick *rick)
+	struct timeval	sv;
+	int							d;
 
-static pthread_t th[PTHREAD_NUM]; //philo
-//static	pthread_mutex_t muts[PTHREAD_NUM]; //fork
+	while (i < PHILO_NUM)
+	{
+		gettimeofday(&sv, NULL);
+		d = msec_diff_timeval(sv, *last_eat);
+		if (d < TIME_TO_DIE)
+			usleep(TIME_TO_DIE - d);
+		else
+		{
+			pthread_mutex_lock(&deathnote);
+			death_flag = 1;
+			pthread_mutex_unlock(&deathnote);
+			philo_die(ph);
+		}
+	}
+}
 
-void	*routine(void *args)
+int	start_threads(t_rick *rick)
 {
-	int id;
+	int	i;
 
-	id = *(int *)args;
-	usleep(1000);
-	printf("%u - Thread %d\n", get_time(1), id);
-	return args;
+	i = 0;
+	while (i < rick->nb_phils)
+	{
+		if (pthread_create(rick->ths + i, NULL, &philo_routine, rick->phs + i))
+		{
+			pthread_mutex_lock(&rick->mut_sim_status);
+			rick->sim_status = SIM_STOP;
+			pthread_mutex_unlock(&rick->mut_sim_status);
+			wait_phils_thread(rick->ths, i - 1);
+			return (1);
+		}
+		++i;
+	}
+	return (0);
+}
+
+void wait_phils_thread(pthread_t ths[], int i)
+{
+	while (0 <= i)
+	{
+		pthread_join(ths[i], NULL);
+		--i;	
+	}
 }
 
 int	main(int argc, char *argv[])
 {
-	(void) argc;
-	(void) argv;
+	int			nb_phils;
+	t_rick	rick;
+	int			i;
 	
-	get_time(0);
-	int	i = 0;
-	while (i < PTHREAD_NUM)
+	if (create_rick(&rick, nb_phils))
+		return (EXIT_FAILURE);
+	if (init_rick(&rick))
+		return clean_exit();
+	if (start_threads(&rick))
 	{
-		int *th_args;
-
-		th_args = malloc(sizeof(int));
-		*th_args = i;
-		pthread_create(th + i, NULL, &routine, th_args);
-		++i;
+		clean_muts_rick(&rick, rick.nb_phils - 1);
+		return (clean_exit());
 	}
-
-	i = 0;
-	while (i < PTHREAD_NUM)
-	{
-		pthread_join(th[i], NULL);
-		++i;
-	}	
+	rick_watch(rick);
+	wait_phils_thread(rick.ths, rick.nb_phils - 1);
+	clean_muts_rick(&rick, rick.nb_phils - 1);
+	clean_exit();
 	return (0);
 }

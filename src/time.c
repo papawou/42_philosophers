@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_time.c                                          :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 17:23:06 by kmendes           #+#    #+#             */
-/*   Updated: 2022/06/29 17:33:22 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/03 17:55:24 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/time.h>
 #include <stdlib.h>
 
-static unsigned int usec_diff_timeval(struct timeval a, struct timeval b)
+unsigned int usec_diff_timeval(struct timeval a, struct timeval b)
 {
 	unsigned int	delta;
 	int						sec;
@@ -31,7 +31,7 @@ static unsigned int usec_diff_timeval(struct timeval a, struct timeval b)
 	return (delta);
 }
 
-static unsigned int msec_diff_timeval(struct timeval a, struct timeval b)
+unsigned int msec_diff_timeval(struct timeval a, struct timeval b)
 {
 	unsigned int	delta;
 	int						sec;
@@ -66,4 +66,12 @@ unsigned int	get_time(int msec)
 		return (usec_diff_timeval(tv, tv_start));
 	else
 		return (msec_diff_timeval(tv, tv_start));
+}
+
+unsigned int get_timestamp(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + (tv.tv_usec / 1000));
 }
