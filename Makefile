@@ -12,7 +12,7 @@ INC_DIR := -I./includes
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 
-SRC := main.c ft_time.c msg.c
+SRC := main.c time.c msg.c rick.c philosopher.c clean_exit.c
 OBJ := ${addprefix $(OBJ_DIR)/, ${SRC:.c=.o}}
 
 LIBS := -lpthread

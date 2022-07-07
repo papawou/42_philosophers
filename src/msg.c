@@ -6,13 +6,14 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:12 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/07 14:36:02 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/07 18:55:46 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "philosophers.h"
 
-static const char	*get_phil_msg(enum e_phil_msg msg)
+const char	*get_phil_msg(enum e_phil_msg msg)
 {
 	if (msg == PHIL_DIE)
 		return ("%u %d is dying\n");

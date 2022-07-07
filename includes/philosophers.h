@@ -6,21 +6,15 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:19 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/06 20:03:24 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/07 22:37:39 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# define PHILO_NUM 2
-
-# define TIME_TO_DIE 1000
-# define TIME_TO_EAT 10
-# define TIME_TO_SLEEP 10
-# define NB_TIMES_EAT	1
-
 #include <pthread.h>
+#include <sys/time.h>
 
 enum e_sim_status
 {
@@ -28,6 +22,19 @@ enum e_sim_status
 	SIM_STOP,
 	SIM_WAIT
 };
+
+typedef struct s_rick t_rick;
+
+
+typedef struct s_philo
+{
+	int									id;
+	unsigned int				eat_left;
+	unsigned int				*last_eat;
+	pthread_mutex_t			*m_eat;
+	pthread_mutex_t			*forks[2];
+	t_rick							*rick;
+}	t_philo;
 
 typedef struct	s_rick
 {
@@ -57,23 +64,15 @@ enum e_phil_msg {
 	PHIL_DIE
 };
 
-typedef struct s_philo
-{
-	int									id;
-	unsigned int				eat_left;
-	unsigned int				*last_eat;
-	pthread_mutex_t			*m_eat;
-	pthread_mutex_t			*forks[2];
-	t_rick							*rick;
-}	t_philo;
-
 //time.c
 unsigned int	msec_diff_timeval(struct timeval a, struct timeval b);
 unsigned int	usec_diff_timeval(struct timeval a, struct timeval b);
 unsigned int	get_time(int msec);
 unsigned int	get_timestamp(void);
+unsigned int	get_timestamp_start(void);
 
 //msg.c
+const char	*get_phil_msg(enum e_phil_msg msg);
 int	print_msg(t_rick *rick, int id, unsigned int ts, enum e_phil_msg msg);
 
 

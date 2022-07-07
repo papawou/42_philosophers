@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "philosophers.h"
 
@@ -25,6 +26,11 @@ int	clean_rick(void *ptr_rick)
 int	create_rick(t_rick *rick, unsigned int nb_phils)
 {
 	clean_rick(rick);
+
+	rick->time_to_die = 410;
+	rick->time_to_eat = 200 * 1000;
+	rick->time_to_sleep = 200 * 1000;
+
 	rick->nb_phils = nb_phils;
 	rick->ths = NULL;
 	rick->forks = NULL;
@@ -36,6 +42,7 @@ int	create_rick(t_rick *rick, unsigned int nb_phils)
 	rick->forks = malloc(sizeof(pthread_mutex_t) * rick->nb_phils);
 	rick->muts_lasteat = malloc(sizeof(pthread_mutex_t) * rick->nb_phils);
 	rick->lasteats = malloc(sizeof(unsigned int) * rick->nb_phils);
+	memset(rick->lasteats, 0, sizeof(unsigned int) * rick->nb_phils);
 	rick->phs = malloc(sizeof(t_philo) * rick->nb_phils);
 	if (!rick->ths || !rick->forks || !rick->muts_lasteat || !rick->lasteats || !rick->phs)
 		return (clean_exit());
@@ -56,7 +63,7 @@ int clean_muts_rick(t_rick *rick, int i)
 
 int	init_rick(t_rick *rick)
 {
-	int	i;
+	unsigned int	i;
 
 	if (pthread_mutex_init(&rick->mut_sim_status, NULL))
 		return (1);
@@ -73,4 +80,5 @@ int	init_rick(t_rick *rick)
 		rick->phs[i] = create_philo(rick, i);
 		++i;
 	}
+	return (0);
 }
