@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:19 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/06 04:08:42 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/06 20:03:24 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ enum e_phil_msg {
 typedef struct s_philo
 {
 	int									id;
+	unsigned int				eat_left;
 	unsigned int				*last_eat;
 	pthread_mutex_t			*m_eat;
 	pthread_mutex_t			*forks[2];
@@ -78,6 +79,7 @@ int	print_msg(t_rick *rick, int id, unsigned int ts, enum e_phil_msg msg);
 
 //philo
 t_philo	create_philo(t_rick *rick, unsigned int idx);
+void		*philo_routine(void *args);
 
 //clean_exit
 int	clean_exit(void);

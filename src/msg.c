@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:12 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/06 04:08:25 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/07 14:36:02 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ int	print_msg(t_rick *rick, int id, unsigned int ts, enum e_phil_msg msg)
 		pthread_mutex_unlock(&rick->mut_sim_status);
 		return (1);
 	}
-	if (msg == PHIL_DIE)
-		rick->sim_status = SIM_STOP;
 	printf(get_phil_msg(msg), ts, id);
 	pthread_mutex_unlock(&rick->mut_sim_status);
 	return (0);

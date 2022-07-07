@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:46:57 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/06 04:09:43 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/06 15:28:28 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,30 @@
 #include "philosophers.h"
 
 void	rick_watch(t_rick *rick)
-	struct timeval	sv;
-	int							d;
+{
+	unsigned int	ts;
+	unsigned int	i;
 
-	while (i < PHILO_NUM)
+	i = 0;
+	
+	while (i < rick->nb_phils)
 	{
-		gettimeofday(&sv, NULL);
-		d = msec_diff_timeval(sv, *last_eat);
-		if (d < TIME_TO_DIE)
-			usleep(TIME_TO_DIE - d);
-		else
+		pthread_mutex_lock(&rick->muts_lasteat + i);
+		ts = get_timestamp();
+		if (ts - rick->lasteats[i] > rick->time_to_die)
 		{
-			pthread_mutex_lock(&deathnote);
-			death_flag = 1;
-			pthread_mutex_unlock(&deathnote);
-			philo_die(ph);
+			pthread_mutex_lock(&rick->mut_sim_status);
+			rick->sim_status = SIM_STOP;
+			pthread_mutex_unlock(&rick->mut_sim_status);
+			printf(get_phil_msg(PHIL_DIE), ts, i);
+			pthread_mutex_unlock(&rick->muts_lasteat + i);
+			break ;
 		}
+		pthread_mutex_unlock(&rick->muts_lasteat + i);
+		++i;
+		if (i == rick->nb_phils)
+			i = 0;
+		sleep(42);
 	}
 }
 
@@ -82,7 +90,7 @@ int	main(int argc, char *argv[])
 		clean_muts_rick(&rick, rick.nb_phils - 1);
 		return (clean_exit());
 	}
-	rick_watch(rick);
+	rick_watch(&rick);
 	wait_phils_thread(rick.ths, rick.nb_phils - 1);
 	clean_muts_rick(&rick, rick.nb_phils - 1);
 	clean_exit();
