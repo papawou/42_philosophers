@@ -23,15 +23,15 @@ int	clean_rick(void *ptr_rick)
 	return (1);
 }
 
-int	create_rick(t_rick *rick, unsigned int nb_phils)
+int	create_rick(t_rick *rick)
 {
 	clean_rick(rick);
 
-	rick->time_to_die = 410;
-	rick->time_to_eat = 200 * 1000;
-	rick->time_to_sleep = 200 * 1000;
+	rick->time_to_die = 200;
+	rick->time_to_eat = 100 * 1000;
+	rick->time_to_sleep = 100 * 1000;
 
-	rick->nb_phils = nb_phils;
+	rick->nb_phils = 4;
 	rick->ths = NULL;
 	rick->forks = NULL;
 	rick->muts_lasteat = NULL;

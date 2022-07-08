@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:46:57 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/07 23:43:12 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/08 03:36:42 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,19 @@ void wait_phils_thread(pthread_t ths[], int i)
 
 void	rick_watch(t_rick *rick)
 {
-	unsigned int	ts;
 	unsigned int	i;
+	unsigned time_sleep = 500 / rick->nb_phils;
 
 	i = 0;
-	
 	while (i < rick->nb_phils)
 	{
 		pthread_mutex_lock(rick->muts_lasteat + i);
-		ts = get_timestamp_start();
-		if (ts - rick->lasteats[i] > rick->time_to_die)
+		if (get_timestamp_start() - rick->lasteats[i] > rick->time_to_die)
 		{
 			pthread_mutex_lock(&rick->mut_sim_status);
 			rick->sim_status = SIM_STOP;
 			pthread_mutex_unlock(&rick->mut_sim_status);
-			printf(get_phil_msg(PHIL_DIE), ts, i);
+			printf(get_phil_msg(PHIL_DIE), get_timestamp_start(), i);
 			pthread_mutex_unlock(rick->muts_lasteat + i);
 			break ;
 		}
@@ -52,7 +50,7 @@ void	rick_watch(t_rick *rick)
 		++i;
 		if (i == rick->nb_phils)
 			i = 0;
-		usleep(100);
+		usleep(time_sleep);
 	}
 }
 
@@ -79,14 +77,12 @@ int	start_threads(t_rick *rick)
 
 int	main(int argc, char *argv[])
 {
-	int			nb_phils;
 	t_rick	rick;
 	
 	(void) argc;
 	(void) argv;
-	nb_phils = 4;
 	get_timestamp_start();
-	if (create_rick(&rick, nb_phils))
+	if (create_rick(&rick))
 		return (EXIT_FAILURE);
 	if (init_rick(&rick))
 		return clean_exit();

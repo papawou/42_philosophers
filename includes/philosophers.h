@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:19 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/07 22:37:39 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/08 02:52:38 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ unsigned int	get_timestamp_start(void);
 
 //msg.c
 const char	*get_phil_msg(enum e_phil_msg msg);
-int	print_msg(t_rick *rick, int id, unsigned int ts, enum e_phil_msg msg);
+int					print_msg(t_rick *rick, int id, enum e_phil_msg msg);
 
 
 //philo
@@ -85,7 +85,7 @@ int	clean_exit(void);
 
 //rick
 int	clean_rick(void *ptr_rick);
-int	create_rick(t_rick *rick, unsigned int nb_phils);
+int	create_rick(t_rick *rick);
 int	init_rick(t_rick *rick);
 int clean_muts_rick(t_rick *rick, int i);
 #endif

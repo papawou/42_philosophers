@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:12 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/07 18:55:46 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/07/08 02:32:48 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ const char	*get_phil_msg(enum e_phil_msg msg)
 	return ("get_code_msg error: unknown enum in msg");
 }
 
-int	print_msg(t_rick *rick, int id, unsigned int ts, enum e_phil_msg msg)
+int	print_msg(t_rick *rick, int id, enum e_phil_msg msg)
 {
 	pthread_mutex_lock(&rick->mut_sim_status);
 	if (rick->sim_status != SIM_RUN)
@@ -36,7 +36,7 @@ int	print_msg(t_rick *rick, int id, unsigned int ts, enum e_phil_msg msg)
 		pthread_mutex_unlock(&rick->mut_sim_status);
 		return (1);
 	}
-	printf(get_phil_msg(msg), ts, id);
+	printf(get_phil_msg(msg), get_timestamp_start(), id);
 	pthread_mutex_unlock(&rick->mut_sim_status);
 	return (0);
 }
