@@ -27,8 +27,8 @@ int	create_rick(t_rick *rick)
 {
 	clean_rick(rick);
 
-	rick->time_to_die = 200;
-	rick->time_to_eat = 100 * 1000;
+	rick->time_to_die = 310;
+	rick->time_to_eat = 200 * 1000;
 	rick->time_to_sleep = 100 * 1000;
 
 	rick->nb_phils = 4;
