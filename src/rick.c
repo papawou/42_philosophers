@@ -30,8 +30,8 @@ int	create_rick(t_rick *rick)
 	rick->time_to_die = 310;
 	rick->time_to_eat = 200 * 1000;
 	rick->time_to_sleep = 100 * 1000;
-
 	rick->nb_phils = 4;
+	rick->nb_times_eat = -1;
 	rick->ths = NULL;
 	rick->forks = NULL;
 	rick->muts_lasteat = NULL;
@@ -42,10 +42,10 @@ int	create_rick(t_rick *rick)
 	rick->forks = malloc(sizeof(pthread_mutex_t) * rick->nb_phils);
 	rick->muts_lasteat = malloc(sizeof(pthread_mutex_t) * rick->nb_phils);
 	rick->lasteats = malloc(sizeof(unsigned int) * rick->nb_phils);
-	memset(rick->lasteats, 0, sizeof(unsigned int) * rick->nb_phils);
 	rick->phs = malloc(sizeof(t_philo) * rick->nb_phils);
 	if (!rick->ths || !rick->forks || !rick->muts_lasteat || !rick->lasteats || !rick->phs)
 		return (clean_exit());
+	memset(rick->lasteats, 0, sizeof(unsigned int) * rick->nb_phils);
 	return (0);
 }
 
