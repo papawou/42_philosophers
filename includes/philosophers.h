@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:19 by kmendes           #+#    #+#             */
-/*   Updated: 2022/07/08 02:52:38 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/15 13:55:44 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ enum e_sim_status
 };
 
 typedef struct s_rick t_rick;
-
 
 typedef struct s_philo
 {
@@ -88,4 +87,8 @@ int	clean_rick(void *ptr_rick);
 int	create_rick(t_rick *rick);
 int	init_rick(t_rick *rick);
 int clean_muts_rick(t_rick *rick, int i);
+
+//parser
+int	ft_atoi_safe(char *str, int *dst);
+
 #endif
