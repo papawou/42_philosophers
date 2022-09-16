@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:46:57 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 02:50:59 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/16 03:22:06 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,20 @@ void	wait_phils_thread(t_rick *rick, int i)
 	}
 }
 
+static int	check_eat_times(int min_eat_times, int eat_times, int pot)
+{
+	if (min_eat_times != -1 && eat_times >= min_eat_times)
+		return (pot + 1);
+	return (0);
+}
+
 void	rick_watch(t_rick *rick)
 {
-	unsigned int	i;
-	unsigned int	time_sleep;
+	static unsigned int	i = 0;
+	static unsigned int	time_sleep;
+	static int			pot = 0;
 
-	time_sleep = 500 / rick->nb_phils;
-	i = 0;
+	time_sleep = 900 / rick->nb_phils;
 	while (i < rick->nb_phils)
 	{
 		pthread_mutex_lock(&rick->phs[i].m_eat);
@@ -47,11 +54,14 @@ void	rick_watch(t_rick *rick)
 			break ;
 		}
 		pthread_mutex_unlock(&rick->phs[i].m_eat);
+		pot = check_eat_times(rick->min_eat_times, rick->phs[i].eat_times, pot);
+		if (pot == (int) rick->nb_phils)
+			break ;
 		++i;
-		if (i == rick->nb_phils)
-			i = 0;
+		i %= rick->nb_phils;
 		usleep(time_sleep);
 	}
+	rick->sim_status = SIM_STOP;
 }
 
 int	start_threads(t_rick *rick)

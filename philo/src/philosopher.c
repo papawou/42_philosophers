@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:22 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 02:37:09 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/16 03:27:12 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void	*philo_routine(void *args)
 		pthread_mutex_lock(ph->forks[0]);
 		print_msg(ph->rick, ph->id, PHIL_FORK_TAKEN);
 		if (ph->forks[1] == NULL)
+		{
+			pthread_mutex_unlock(ph->forks[0]);
 			break ;
+		}
 		pthread_mutex_lock(ph->forks[1]);
 		print_msg(ph->rick, ph->id, PHIL_FORK_TAKEN);
 		pthread_mutex_lock(&ph->m_eat);
