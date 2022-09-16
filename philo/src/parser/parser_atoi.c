@@ -6,15 +6,21 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 16:57:09 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/15 13:54:58 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/15 21:02:31 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 
-static int	ft_isdigit(int c)
+static int	ft_isdigit(char c)
 {
 	return ('0' <= c && c <= '9');
+}
+
+static int	ft_isspace(char c)
+{
+	return (c == '\t' || c == '\n' || c == '\v'
+		|| c == '\f' || c == '\r' || c == ' ');
 }
 
 static int	ft_atoi_safe_3(int *nb, char *str, int sign)
@@ -65,6 +71,8 @@ int	ft_atoi_safe(char *str, int *dst)
 			return (-1);
 		++str;
 	}
+	if (*str)
+		return (-1);
 	*dst = nb;
 	return (str - src_str);
 }

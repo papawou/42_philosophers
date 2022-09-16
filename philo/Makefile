@@ -1,4 +1,4 @@
-NAME := example.out
+NAME := philo
 
 CC := gcc
 DEBUG ?= 0
@@ -12,7 +12,7 @@ INC_DIR := -I./includes
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 
-SRC := main.c time.c msg.c rick.c philosopher.c clean_exit.c
+SRC := main.c time.c msg.c rick.c philosopher.c clean_exit.c parser/parser.c parser/parser_atoi.c
 OBJ := ${addprefix $(OBJ_DIR)/, ${SRC:.c=.o}}
 
 LIBS := -lpthread
