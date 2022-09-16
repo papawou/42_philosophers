@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:12 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 03:14:23 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/17 00:25:16 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ const char	*get_phil_msg(enum e_phil_msg msg)
 		return ("%u %d has taken a fork\n");
 	else if (msg == PHIL_THINK)
 		return ("%u %d is thinking\n");
+	else if (msg == PHIL_EAT_TIMES)
+		return ("%u phils min_eat reached\n");
 	return ("get_code_msg error: unknown enum in msg");
 }
 

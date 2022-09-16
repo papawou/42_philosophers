@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:19 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 02:39:55 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/17 00:24:19 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ enum e_phil_msg {
 	PHIL_EAT,
 	PHIL_SLEEP,
 	PHIL_THINK,
-	PHIL_DIE
+	PHIL_DIE,
+	PHIL_EAT_TIMES
 };
 
 //time.c

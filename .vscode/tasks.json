@@ -9,7 +9,7 @@
 				"DEBUG=1"
       ],
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}/philo"
       },
       "problemMatcher": [
         "$gcc"

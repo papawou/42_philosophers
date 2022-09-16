@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:46:57 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 03:22:06 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/17 00:35:13 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,34 @@ void	wait_phils_thread(t_rick *rick, int i)
 	}
 }
 
-static int	check_eat_times(int min_eat_times, int eat_times, int pot)
+static int	check_eat_times(int eat_times, t_rick *rick)
 {
-	if (min_eat_times != -1 && eat_times >= min_eat_times)
-		return (pot + 1);
-	return (0);
+	static int			pot = 0;
+
+	if (rick->min_eat_times == -1 || eat_times < rick->min_eat_times)
+	{
+		pot = 0;
+		return (0);
+	}
+	++pot;
+	if (pot != (int) rick->nb_phils)
+		return (0);
+	pthread_mutex_lock(&rick->mut_sim_status);
+	rick->sim_status = SIM_STOP;
+	pthread_mutex_unlock(&rick->mut_sim_status);
+	printf(get_phil_msg(PHIL_EAT_TIMES), get_timestamp_start());
+	return (1);
 }
 
 void	rick_watch(t_rick *rick)
 {
-	static unsigned int	i = 0;
-	static unsigned int	time_sleep;
-	static int			pot = 0;
+	unsigned int	i;
 
-	time_sleep = 900 / rick->nb_phils;
+	i = 0;
 	while (i < rick->nb_phils)
 	{
 		pthread_mutex_lock(&rick->phs[i].m_eat);
-		if (get_timestamp_start() - rick->phs[i].last_eat >= rick->time_to_die)
+		if (get_timestamp_start() - rick->phs[i].last_eat > rick->time_to_die)
 		{
 			pthread_mutex_lock(&rick->mut_sim_status);
 			rick->sim_status = SIM_STOP;
@@ -54,14 +64,13 @@ void	rick_watch(t_rick *rick)
 			break ;
 		}
 		pthread_mutex_unlock(&rick->phs[i].m_eat);
-		pot = check_eat_times(rick->min_eat_times, rick->phs[i].eat_times, pot);
-		if (pot == (int) rick->nb_phils)
+		if (check_eat_times(rick->phs[i].eat_times, rick))
 			break ;
 		++i;
-		i %= rick->nb_phils;
-		usleep(time_sleep);
+		if (i == rick->nb_phils)
+			i = 0;
+		usleep(100);
 	}
-	rick->sim_status = SIM_STOP;
 }
 
 int	start_threads(t_rick *rick)

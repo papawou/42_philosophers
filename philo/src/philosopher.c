@@ -6,7 +6,7 @@
 /*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:22 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 03:27:12 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/17 00:20:29 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 
 #include "philosophers.h"
 
-void	ft_usleep(unsigned int t)
+int	ft_usleep(unsigned int t, t_rick *rick)
 {
 	unsigned int	t_start;
 
 	t /= 1000;
 	t_start = get_timestamp();
-	while ((get_timestamp() - t_start) < t)
-		usleep(50);
+	while (rick->sim_status == SIM_RUN && (get_timestamp() - t_start) < t)
+		usleep(100);
+	return (rick->sim_status == SIM_STOP);
 }
 
 t_philo	create_philo(t_rick *rick, unsigned int idx)
@@ -40,6 +41,33 @@ t_philo	create_philo(t_rick *rick, unsigned int idx)
 	return (philo);
 }
 
+static int	philo_eat(t_philo *ph)
+{
+	pthread_mutex_lock(ph->forks[0]);
+	print_msg(ph->rick, ph->id, PHIL_FORK_TAKEN);
+	if (ph->forks[1] == NULL)
+	{
+		pthread_mutex_unlock(ph->forks[0]);
+		return (1);
+	}
+	pthread_mutex_lock(ph->forks[1]);
+	print_msg(ph->rick, ph->id, PHIL_FORK_TAKEN);
+	pthread_mutex_lock(&ph->m_eat);
+	ph->last_eat = get_timestamp_start();
+	pthread_mutex_unlock(&ph->m_eat);
+	print_msg(ph->rick, ph->id, PHIL_EAT);
+	if (ft_usleep(ph->rick->time_to_eat, ph->rick))
+	{
+		pthread_mutex_unlock(ph->forks[1]);
+		pthread_mutex_unlock(ph->forks[0]);
+		return (1);
+	}
+	++ph->eat_times;
+	pthread_mutex_unlock(ph->forks[1]);
+	pthread_mutex_unlock(ph->forks[0]);
+	return (0);
+}
+
 void	*philo_routine(void *args)
 {
 	t_philo		*ph;
@@ -47,26 +75,10 @@ void	*philo_routine(void *args)
 	ph = (t_philo *) args;
 	while (ph->rick->sim_status == SIM_RUN)
 	{
-		pthread_mutex_lock(ph->forks[0]);
-		print_msg(ph->rick, ph->id, PHIL_FORK_TAKEN);
-		if (ph->forks[1] == NULL)
-		{
-			pthread_mutex_unlock(ph->forks[0]);
+		if (philo_eat(ph))
 			break ;
-		}
-		pthread_mutex_lock(ph->forks[1]);
-		print_msg(ph->rick, ph->id, PHIL_FORK_TAKEN);
-		pthread_mutex_lock(&ph->m_eat);
-		ph->last_eat = get_timestamp_start();
-		pthread_mutex_unlock(&ph->m_eat);
-		print_msg(ph->rick, ph->id, PHIL_EAT);
-		ft_usleep(ph->rick->time_to_eat);
-		++ph->eat_times;
-		pthread_mutex_unlock(ph->forks[0]);
-		pthread_mutex_unlock(ph->forks[1]);
 		print_msg(ph->rick, ph->id, PHIL_SLEEP);
-		ft_usleep(ph->rick->time_to_sleep);
-		print_msg(ph->rick, ph->id, PHIL_THINK);
+		ft_usleep(ph->rick->time_to_sleep, ph->rick);
 	}
 	return (args);
 }
