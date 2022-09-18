@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: kmendes <kmendes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 04:07:22 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/17 00:20:29 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/18 16:17:07 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	ft_usleep(unsigned int t, t_rick *rick)
 	unsigned int	t_start;
 
 	t /= 1000;
-	t_start = get_timestamp();
-	while (rick->sim_status == SIM_RUN && (get_timestamp() - t_start) < t)
+	t_start = get_timestamp_start();
+	while (rick->sim_status == SIM_RUN && (get_timestamp_start() - t_start) < t)
 		usleep(100);
 	return (rick->sim_status == SIM_STOP);
 }

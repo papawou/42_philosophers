@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: kmendes <kmendes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 17:23:06 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/16 02:39:07 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/18 16:36:46 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,15 @@ unsigned int	get_timestamp(void)
 
 unsigned int	get_timestamp_start(void)
 {
-	static unsigned int	time_start = 0;
-	unsigned int		ts;
+	static unsigned int	ts_ms_start = 0;
+	struct timeval		tv_tmp;
 
-	if (time_start == 0)
+	if (!ts_ms_start)
 	{
-		time_start = get_timestamp();
+		gettimeofday(&tv_tmp, NULL);
+		ts_ms_start = tv_tmp.tv_sec * 1000 + (tv_tmp.tv_usec) / 1000;
 		return (0);
 	}
-	ts = get_timestamp();
-	return (ts - time_start);
+	gettimeofday(&tv_tmp, NULL);
+	return ((tv_tmp.tv_sec * 1000 + (tv_tmp.tv_usec) / 1000) - ts_ms_start);
 }

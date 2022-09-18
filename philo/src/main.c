@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmendes <kmendes@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: kmendes <kmendes@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 14:46:57 by kmendes           #+#    #+#             */
-/*   Updated: 2022/09/17 00:35:13 by kmendes          ###   ########.fr       */
+/*   Updated: 2022/09/18 16:38:23 by kmendes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	rick_watch(t_rick *rick)
 	while (i < rick->nb_phils)
 	{
 		pthread_mutex_lock(&rick->phs[i].m_eat);
-		if (get_timestamp_start() - rick->phs[i].last_eat > rick->time_to_die)
+		if ((get_timestamp_start() - rick->phs[i].last_eat) > rick->time_to_die)
 		{
 			pthread_mutex_lock(&rick->mut_sim_status);
 			rick->sim_status = SIM_STOP;
